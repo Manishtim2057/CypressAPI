@@ -1,5 +1,4 @@
-import { baseConfig } from "../../fixtures/baseConfig";
-
+import { baseConfig } from "../../../fixtures/baseConfig";
 
 describe('Campaign Theme list', () => {
     before(() => {

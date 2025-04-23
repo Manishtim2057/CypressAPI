@@ -1,6 +1,4 @@
-import { baseConfig } from "../../fixtures/baseConfig";
-
-
+import { baseConfig } from "../../../fixtures/baseConfig";
 describe('DELETE Campaign Theme', () => {
     let campaignBannerId;
     let resellerCampaignBannerId;

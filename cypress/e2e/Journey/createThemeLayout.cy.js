@@ -123,7 +123,7 @@ describe('Campaign Theme Layout list', () => {
                 headers: {
                     Authorization: `Bearer ${resellerAdminAccessToken}`,
                 },
-                qs:{
+                qs: {
                     domain: "b13ee48a8c6048dfa29927c44e9dc19e"
                 },
                 failOnStatusCode: false,
@@ -669,10 +669,99 @@ describe('Campaign Theme Layout list', () => {
             ,
             failOnStatusCode: false,
         }).then((response) => {
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Not found error');
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(globalDocumentId);
+            expect(childrenObject.resource_id).to.eql(globalDocumentId);
+        })
+    });
+    it('Create the Campaign layout with valid api and valid method with grand children', () => {
 
-
+        const accessToken = Cypress.env('accessToken');
+        cy.request({
+            method: 'POST',
+            url: `${baseConfig.url}/sites/${baseConfig.siteId}/campaigns/${baseConfig.landingPageId}/layouts`,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: {
+                "title": "Header",
+                "content": [
+                    {
+                        "This is the Header of the Journey Edited": {
+                            "resource_id": globalImageId,
+                            "resource_type": "GlobalImage",
+                        }
+                    }
+                ],
+                "order": 1,
+                "children": [
+                    {
+                        "title": "Children 1",
+                        "content": [
+                            {
+                                "This is Pop-up Content": {
+                                    "resource_id": globalDocumentId,
+                                    "resource_type": "GlobalDocument",
+                                }
+                            }
+                        ],
+                        "order": 1,
+                        "children": [
+                            {
+                                "title": "Children 2",
+                                "content": [
+                                    {
+                                        "Children 2": {
+                                            "resource_id": globalContactId,
+                                            "resource_type": "GlobalContact",
+                                        }
+                                    }
+                                ],
+                                "order": 1
+                            },
+                            {
+                                "title": "Children 3",
+                                "content": [
+                                    {
+                                        "Children 3": {
+                                            "resource_id": globalLinkId,
+                                            "resource_type": "GlobalLink",
+                                        }
+                                    }
+                                ],
+                                "order": 1
+                            }
+                        ]
+                    }
+                ]
+            },
+            failOnStatusCode: false,
+        }).then((response) => {
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey Edited'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childSecond = response.body.body.children[0].children[0].content[0];
+            const childThird = response.body.body.children[0].children[1].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            const childSecondObject = childSecond['Children 2'];
+            const childThirdObject = childThird['Children 3']
+            // const children = response.body.body.children[0];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey Edited');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(globalImageId);
+            expect(childrenObject.resource_id).to.eql(globalDocumentId);
+            expect(childSecondObject.resource_id).to.eql(globalContactId);
+            expect(childThirdObject.resource_id).to.eql(globalLinkId);
+                       
         })
     });
     it('Create the Campaign layout with Side Admin Permission', () => {
@@ -715,9 +804,16 @@ describe('Campaign Theme Layout list', () => {
             ,
             failOnStatusCode: false,
         }).then((response) => {
-            cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Not found error');
-
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+             cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(globalDocumentId);
+            expect(childrenObject.resource_id).to.eql(globalDocumentId);
 
         })
     });
@@ -760,8 +856,16 @@ describe('Campaign Theme Layout list', () => {
             },
             failOnStatusCode: false,
         }).then((response) => {
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Not found error');
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(globalDocumentId);
+            expect(childrenObject.resource_id).to.eql(globalDocumentId);
         })
     });
     it('Create the Campaign layout with Site Read Permission', () => {
@@ -816,8 +920,8 @@ describe('Campaign Theme Layout list', () => {
             headers: {
                 Authorization: `Bearer ${resellerAdminAccessToken}`,
             },
-            qs:{
-                domain:  "b13ee48a8c6048dfa29927c44e9dc19e"
+            qs: {
+                domain: "b13ee48a8c6048dfa29927c44e9dc19e"
             },
             body: {
                 "title": "Header",
@@ -850,7 +954,16 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Not found error');
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            // expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(resellerGlobalDocumentId);
+            expect(childrenObject.resource_id).to.eql(resellerGlobalDocumentId);
         })
     });
     it('Create the Campaign layoutwith Title as empty.', () => {
@@ -1299,7 +1412,16 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(globalContactId);
+            expect(childrenObject.resource_id).to.eql(globalContactId);
         })
     });
     it('Create Campaign theme layout with resource type as global Link', () => {
@@ -1344,7 +1466,16 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(globalLinkId);
+            expect(childrenObject.resource_id).to.eql(globalLinkId);
         })
     });
     it('Create Campaign theme layout with resource type as global image', () => {
@@ -1389,7 +1520,16 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(globalImageId);
+            expect(childrenObject.resource_id).to.eql(globalImageId);
         })
     });
     it('Create Campaign theme layout with resource type as site Document', () => {
@@ -1434,7 +1574,17 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            cy.log('Sites Response:', JSON.stringify(response));
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(siteDocumentId);
+            expect(childrenObject.resource_id).to.eql(siteDocumentId);
         })
     });
     it('Create Campaign theme layout with resource type as site Contact', () => {
@@ -1479,7 +1629,17 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            cy.log('Sites Response:', JSON.stringify(response));
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(siteContactId);
+            expect(childrenObject.resource_id).to.eql(siteContactId);
         })
     });
     it('Create Campaign theme layout with resource type as site Link', () => {
@@ -1524,7 +1684,17 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            cy.log('Sites Response:', JSON.stringify(response));
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(siteLinkId);
+            expect(childrenObject.resource_id).to.eql(siteLinkId);
         })
     });
     it('Create Campaign theme layout with resource type as site Image', () => {
@@ -1569,7 +1739,17 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            cy.log('Sites Response:', JSON.stringify(response));
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(siteImageId);
+            expect(childrenObject.resource_id).to.eql(siteImageId);
         })
     });
     it('Create Campaign theme layout with resource type as Video', () => {
@@ -1617,7 +1797,17 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            cy.log('Sites Response:', JSON.stringify(response));
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(videoId);
+            expect(childrenObject.resource_id).to.eql(videoId);
         })
     });
     it('Create Campaign theme layout with resource type as Site Video', () => {
@@ -1661,7 +1851,17 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            cy.log('Sites Response:', JSON.stringify(response));
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(siteVideoId);
+            expect(childrenObject.resource_id).to.eql(siteVideoId);
         })
     });
     it('Create Campaign theme layout with resource type as Calculator', () => {
@@ -1705,7 +1905,17 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            cy.log('Sites Response:', JSON.stringify(response));
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(calculatorId);
+            expect(childrenObject.resource_id).to.eql(calculatorId);
         })
     });
     it('Create Campaign theme layout with resource type as Dynamic Calculator', () => {
@@ -1749,7 +1959,17 @@ describe('Campaign Theme Layout list', () => {
             failOnStatusCode: false,
         }).then((response) => {
             cy.log('Sites Response:', JSON.stringify(response));
-            expect(response.status).to.eql(200, 'Check for Success Status');
+            cy.log('Sites Response:', JSON.stringify(response));
+            const contentItem = response.body.body.content[0];
+            const headerObject = contentItem['This is the Header of the Journey'];
+            const childrenItem = response.body.body.children[0].content[0];
+            const childrenObject = childrenItem['This is Pop-up Content'];
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success error.');
+            expect(contentItem).to.have.property('This is the Header of the Journey');
+            expect(headerObject).to.have.property('resource_id');
+            expect(headerObject.resource_id).to.eql(1);
+            expect(childrenObject.resource_id).to.eql(1);
         })
     });
     it('Create Campaign theme layout with resource type as configed Documents', () => {
@@ -1822,7 +2042,17 @@ describe('Campaign Theme Layout list', () => {
                 failOnStatusCode: false,
             }).then((response) => {
                 cy.log('Sites Response:', JSON.stringify(response));
-                expect(response.status).to.eql(200, 'Check for Success Status');
+                cy.log('Sites Response:', JSON.stringify(response));
+                const contentItem = response.body.body.content[0];
+                const headerObject = contentItem['This is the Header of the Journey'];
+                const childrenItem = response.body.body.children[0].content[0];
+                const childrenObject = childrenItem['This is Pop-up Content'];
+                cy.log('Sites Response:', JSON.stringify(response));
+                expect(response.status).to.eql(200, 'Check for Success error.');
+                expect(contentItem).to.have.property('This is the Header of the Journey');
+                expect(headerObject).to.have.property('resource_id');
+                expect(headerObject.resource_id).to.eql(configuredDocumentId);
+                expect(childrenObject.resource_id).to.eql(configuredDocumentId);
             })
         });
     });
@@ -1895,7 +2125,17 @@ describe('Campaign Theme Layout list', () => {
                 failOnStatusCode: false,
             }).then((response) => {
                 cy.log('Sites Response:', JSON.stringify(response));
-                expect(response.status).to.eql(200, 'Check for Success Status');
+                cy.log('Sites Response:', JSON.stringify(response));
+                const contentItem = response.body.body.content[0];
+                const headerObject = contentItem['This is the Header of the Journey'];
+                const childrenItem = response.body.body.children[0].content[0];
+                const childrenObject = childrenItem['This is Pop-up Content'];
+                cy.log('Sites Response:', JSON.stringify(response));
+                expect(response.status).to.eql(200, 'Check for Success error.');
+                expect(contentItem).to.have.property('This is the Header of the Journey');
+                expect(headerObject).to.have.property('resource_id');
+                expect(headerObject.resource_id).to.eql(configuredContactId);
+                expect(childrenObject.resource_id).to.eql(configuredContactId);
             })
         });
     });
@@ -1904,12 +2144,12 @@ describe('Campaign Theme Layout list', () => {
         cy.request({
             method: 'PUT',
             url: baseConfig.baseUrl + '/sites/' + baseConfig.siteId + '/link-config/',
-           body:{
+            body: {
                 "title": "configured link",
                 "description": null,
                 "thumbnail_url": null,
                 "link_id": globalLinkId
-              },
+            },
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -1967,7 +2207,17 @@ describe('Campaign Theme Layout list', () => {
                 failOnStatusCode: false,
             }).then((response) => {
                 cy.log('Sites Response:', JSON.stringify(response));
-                expect(response.status).to.eql(200, 'Check for Success Status');
+                cy.log('Sites Response:', JSON.stringify(response));
+                const contentItem = response.body.body.content[0];
+                const headerObject = contentItem['This is the Header of the Journey'];
+                const childrenItem = response.body.body.children[0].content[0];
+                const childrenObject = childrenItem['This is Pop-up Content'];
+                cy.log('Sites Response:', JSON.stringify(response));
+                expect(response.status).to.eql(200, 'Check for Success error.');
+                expect(contentItem).to.have.property('This is the Header of the Journey');
+                // expect(headerObject).to.have.property('resource_id');
+                expect(headerObject.resource_id).to.eql(configuredLinkId);
+                expect(childrenObject.resource_id).to.eql(configuredLinkId);
             })
         });
     });
@@ -2040,7 +2290,17 @@ describe('Campaign Theme Layout list', () => {
                 failOnStatusCode: false,
             }).then((response) => {
                 cy.log('Sites Response:', JSON.stringify(response));
-                expect(response.status).to.eql(200, 'Check for Success Status');
+                cy.log('Sites Response:', JSON.stringify(response));
+                const contentItem = response.body.body.content[0];
+                const headerObject = contentItem['This is the Header of the Journey'];
+                const childrenItem = response.body.body.children[0].content[0];
+                const childrenObject = childrenItem['This is Pop-up Content'];
+                cy.log('Sites Response:', JSON.stringify(response));
+                expect(response.status).to.eql(200, 'Check for Success error.');
+                expect(contentItem).to.have.property('This is the Header of the Journey');
+                expect(headerObject).to.have.property('resource_id');
+                expect(headerObject.resource_id).to.eql(configuredImageId);
+                expect(childrenObject.resource_id).to.eql(configuredImageId);
             })
         });
     });

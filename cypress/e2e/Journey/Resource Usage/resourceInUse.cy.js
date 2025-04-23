@@ -1412,7 +1412,7 @@ describe('Campaign Theme Layout list', () => {
     //     })
     //     cy.then('Fetch for Contact usage.', () => {
     //         cy.request({
-    //             url: `${baseConfig.baseUrl}/sites/${baseConfig.siteId}/${videoId}/usage`,
+    //             url: `${baseConfig.baseUrl}/sites/${baseConfig.siteId}/image-config/${imageId}/usage`,
     //             method: "GET",
     //             headers: {
     //                 Authorization: `Bearer ${accessToken}`,
@@ -1426,5 +1426,193 @@ describe('Campaign Theme Layout list', () => {
     //         })
     //     })
     // })
+    it('View usage for Videos', () => {
+        const accessToken = Cypress.env('accessToken');
+        cy.request({
+            method: 'POST',
+            url: `${baseConfig.url}/sites/${baseConfig.siteId}/campaigns/${baseConfig.landingPageId}/layouts`,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: {
+                "title": "Header",
+                "content": [{
+                    "This is the Header of the Journey": {
+                        "resource_id": videoId,
+                        "version_id": null,
+                        "resource_type": "Video",
+                        "resources": {
+                            "resource_id": videoId,
+                            "version_id": null,
+                            "resource_type": "Video"
+                        }
+                    }
+                }],
+                "order": 1,
+                "children": [{
+                    "title": "Banner",
+                    "content":
+                        [{
+                            "This is Pop-up Content": {
+                                "resource_id": videoId,
+                                "version_id": null,
+                                "resource_type": "Video",
+                                "resources": {
+                                    "resource_id": videoId,
+                                    "version_id": null,
+                                    "resource_type": "Video"
+                                }
+                            }
+                        }],
+                    "order": 1
+                }
+                ]
+            },
+            failOnStatusCode: false,
+        }).then((response) => {
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success Status');
+        })
+        cy.then('Fetch for Video usage.', () => {
+            cy.request({
+                url: `${baseConfig.url}/videos/${videoId}/status`,
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body:{
+                    "status": 1
+                },
+                failOnStatusCode: false,
+            }).then((response) => {
+                cy.log('Sites Response:', JSON.stringify(response));
+                expect(response.status).to.eql(428);
+                expect(response.body.status.message).to.eql('The resource you are trying to modify is in use and therefore cannot be modified.');
+            })
+        })
+    })
+    it('View usage for Calculator', () => {
+        const accessToken = Cypress.env('accessToken');
+        cy.request({
+            method: 'POST',
+            url: `${baseConfig.url}/sites/${baseConfig.siteId}/campaigns/${baseConfig.landingPageId}/layouts`,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: {
+                "title": "Header",
+                "content": [{
+                    "This is the Header of the Journey": {
+                        "resource_id": calculatorId,
+                        "resource_type": "Calculator",
+                        "resources": {
+                            "resource_id": calculatorId,
+                            "resource_type": "Calculator"
+                        }
+                    }
+                }],
+                "order": 1,
+                "children": [{
+                    "title": "Banner",
+                    "content":
+                        [{
+                            "This is Pop-up Content": {
+                                "resource_id": calculatorId,
+                                "resource_type": "Calculator",
+                                "resources": {
+                                    "resource_id": calculatorId,
+                                    "resource_type": "Calculator"
+                                }
+                            }
+                        }],
+                    "order": 1
+                }
+                ]
+            },
+            failOnStatusCode: false,
+        }).then((response) => {
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success Status');
+        })
+        cy.then('Fetch for Contact usage.', () => {
+            cy.request({
+              url: `${baseConfig.url}/calculators/${calculatorId}/status`,
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body:{
+                    "status": 1
+                },
+                failOnStatusCode: false,
+            }).then((response) => {
+                cy.log('Sites Response:', JSON.stringify(response));
+                expect(response.status).to.eql(428);
+                expect(response.body.status.message).to.eql('The resource you are trying to modify is in use and therefore cannot be modified.');
+            })
+        })
+    })
+    it('View usage for Dynamic Calculator', () => {
+        const accessToken = Cypress.env('accessToken');
+        cy.request({
+            method: 'POST',
+            url: `${baseConfig.url}/sites/${baseConfig.siteId}/campaigns/${baseConfig.landingPageId}/layouts`,
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body:{
+                "title": "Header",
+                "content": [{
+                    "This is the Header of the Journey": {
+                        "resource_id": 1,
+                        "resource_type": "SiteDynamicCalculator",
+                        "resources": {
+                            "resource_id": 1,
+                            "resource_type": "SiteDynamicCalculator"
+                        }
+                    }
+                }],
+                "order": 1,
+                "children": [{
+                    "title": "Banner",
+                    "content":
+                        [{
+                            "This is Pop-up Content": {
+                                "resource_id": 1,
+                                "resource_type": "SiteDynamicCalculator",
+                                "resources": {
+                                    "resource_id": 1,
+                                    "resource_type": "SiteDynamicCalculator"
+                                }
+                            }
+                        }],
+                    "order": 1
+                }
+                ]
+            },
+            failOnStatusCode: false,
+        }).then((response) => {
+            cy.log('Sites Response:', JSON.stringify(response));
+            expect(response.status).to.eql(200, 'Check for Success Status');
+        })
+        cy.then('Fetch for Contact usage.', () => {
+            cy.request({
+               url: `${baseConfig.url}/sites/${baseConfig.siteId}/dynamic-calculators/${1}/resources-used`,
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body:{
+                    "status": 1
+                },
+                failOnStatusCode: false,
+            }).then((response) => {
+                cy.log('Sites Response:', JSON.stringify(response));
+                expect(response.status).to.eql(200);
+                expect(response.body.body.campaigns[0]).to.have.property('id');
+                expect(response.body.body.campaigns[0].id).to.eql(baseConfig.landingPageId);
+            })
+        })
+    })
 })
 

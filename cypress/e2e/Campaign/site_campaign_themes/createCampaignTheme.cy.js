@@ -1,5 +1,4 @@
-import { baseConfig } from "../../fixtures/baseConfig";
-
+import { baseConfig } from "../../../fixtures/baseConfig";
 
 describe('Create Campaign Theme', () => {
     let generateRandomString;
@@ -405,9 +404,12 @@ describe('Create Campaign Theme', () => {
         const randomName = Array.from({ length: 60 }, () => Math.random().toString(36)[2]).join('');
         cy.request({
             method: 'POST',
-            url: `${baseConfig.url}/sites/${baseConfig.siteId}/campaign-themes`,
+            url: `${baseConfig.url}/sites/${baseConfig.resellerSiteId}/campaign-themes`,
             headers: {
                 Authorization: `Bearer ${resellerAdminAccessToken}`,
+            },
+            qs:{
+                domain: "b13ee48a8c6048dfa29927c44e9dc19e"
             },
             body: {
                 title: "Campaign_theme",
